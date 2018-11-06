@@ -1,7 +1,7 @@
 import datetime
+import logging
 import sys
 import time
-import logging as custom_logging
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -13,12 +13,16 @@ class LinkedinScraper:
         self.company_name = company_name
         current_time = datetime.datetime.utcnow().strftime(
             "%I:%M%p on %B %d, %Y")
-        log_file_name = company_name + " " + current_time
-        custom_logging.basicConfig(
-            level=custom_logging.INFO,
+        log_file_name = company_name + " " + current_time + ".log"
+        logging.basicConfig(
+            level=logging.INFO,
             filename=log_file_name,
             filemode='w',
             format='%(levelname)s - %(message)s')
+        with open('message.txt', 'r') as message_file:
+            self.message = message_file.read().replace('\n', '').replace(
+                "INSERT_HERE", company_name)
+        logging.info("message to be sent is" + self.message)
 
     def login(self):
         self.driver.get('https://www.linkedin.com/')
@@ -90,9 +94,6 @@ class LinkedinScraper:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        company_name = sys.argv[1]
-    else:
-        company_name = "Macys"
+    company_name = raw_input("Please enter the company name")
     linkedin_scraper = LinkedinScraper(company_name)
     linkedin_scraper.scrape()
