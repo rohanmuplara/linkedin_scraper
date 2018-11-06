@@ -41,16 +41,19 @@ class LinkedinScraper:
                 connection_url = search_result.get_attribute("href")
                 connections.add(connection_url)
                 print connection_url
-            next_button = self.driver.find_element_by_xpath(
-                "//button[contains(@class, 'artdeco-pagination__button--next')]"
-            )
-            next_button.click()
+            try:
+                next_button = self.driver.find_element_by_xpath(
+                    "//button[contains(@class, 'artdeco-pagination__button--next')]"
+                )
+                next_button.click()
+            except:
+                break
         print connections
         return connections
 
     def scrape(self):
         self.login()
-        self.generate_connection_urls()
+        connection_urls = self.generate_connection_urls()
 
 
 if __name__ == "__main__":
